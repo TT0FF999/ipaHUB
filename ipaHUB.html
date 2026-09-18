@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA Hub | Téléchargements iOS Toujours à Jour</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .markdown-body h1 { font-size: 1.5rem; font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; color: #38bdf8; }
+        .markdown-body h2 { font-size: 1.25rem; font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #334155; padding-bottom: 0.25rem; }
+        .markdown-body h3 { font-size: 1.1rem; font-weight: bold; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+        .markdown-body p { margin-bottom: 0.75rem; line-height: 1.6; color: #cbd5e1; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; color: #cbd5e1; }
+        .markdown-body li { margin-bottom: 0.25rem; }
+        .markdown-body a { color: #38bdf8; text-decoration: none; }
+        .markdown-body a:hover { text-decoration: underline; }
+        .markdown-body blockquote { border-left: 4px solid #38bdf8; padding-left: 1rem; color: #94a3b8; font-style: italic; background: rgba(56, 189, 248, 0.1); padding: 0.5rem 1rem; border-radius: 0 0.5rem 0.5rem 0; margin-bottom: 1rem; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid #475569; padding: 0.5rem; text-align: left; }
+        .markdown-body th { background-color: #1e293b; }
+        
+        /* Modal Transitions */
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms, transform 300ms; }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 300ms, transform 300ms; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                        <i class="fa-brands fa-apple text-xl text-white"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">IPA<span class="text-sky-400">Hub</span></span>
+                </div>
+                <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-300">
+                    <a href="#" class="hover:text-white transition-colors">Accueil</a>
+                    <a href="#apps" class="hover:text-white transition-colors">Applications</a>
+                    <a href="https://github.com" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-github text-lg"></i></a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="relative pt-20 pb-16 overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-sky-500/10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-600/10 blur-3xl"></div>
+            
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                    Téléchargez vos <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500">fichiers IPA</span><br>directement depuis la source.
+                </h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-slate-400">
+                    Notre système récupère automatiquement la dernière version disponible sur GitHub. Vous obtenez toujours le fichier le plus récent, sans aucune mise à jour manuelle requise du site.
+                </p>
+            </div>
+        </section>
+
+        <section id="apps" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-sky-400"></i> Applications Disponibles
+                </h2>
+            </div>
+            
+            <div id="app-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-900/50 mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+            <p>&copy; 2026 IPA Hub. Conçu pour un accès direct aux dernières versions.</p>
+            <p>
+                <i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1"></i>
+                Utilisation à vos propres risques. Projets hébergés par leurs auteurs respectifs.
+            </p>
+        </div>
+    </footer>
+
+    <div id="info-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <div class="relative bg-slate-800 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl border border-slate-700 overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-container">
+            
+            <div class="flex items-center justify-between p-5 border-b border-slate-700 bg-slate-800/90 z-10 sticky top-0">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon" class="w-10 h-10 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white leading-tight" id="modal-title">Titre</h3>
+                        <p class="text-xs text-slate-400" id="modal-author">Auteur</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 p-2 rounded-full transition-colors w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow bg-slate-900/50 markdown-body" id="modal-body">
+            </div>
+            
+            <div class="p-5 border-t border-slate-700 bg-slate-800 flex justify-end gap-3 sticky bottom-0">
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white bg-slate-700/50 hover:bg-slate-700 transition-colors">
+                    Fermer
+                </button>
+                <button id="modal-download-btn" class="px-5 py-2.5 rounded-xl font-medium text-white bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-lg shadow-sky-500/25 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> Télécharger le dernier IPA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apps = [
+            {
+                id: 'ketamine',
+                name: 'Ketamine',
+                author: 'nouvborne',
+                repo: 'ketamine',
+                icon: 'fa-syringe',
+                shortDesc: 'Éditeur MobileGestalt sur l\'appareil pour iOS - aucun PC requis.',
+                description: `# Ketamine
+
+### On-Device MobileGestalt Editor for iOS
+
+**Ketamine** is an on-device MobileGestalt editor that lets you modify supported system values directly from your iPhone — no PC required.
+
+> ⚠️ **Experimental:** Many features in Ketamine are still untested across all devices and iOS versions. Things may not work as expected. Please report bugs, issues, and compatibility results in our [Discord](https://discord.gg/Wt8dj8E8ZN).
+
+## Features
+
+* 📱 Runs entirely on iPhone — no PC required
+* 🛠️ MobileGestalt editing, sorted into Device, Display, System, Liquid Glass, iPad and Intelligence
+* 📲 Device spoofing
+* 🧠 **Siri AI Setup** — Apple Intelligence and Siri AI on supported iOS 27 builds, fully reversible
+* 🖼️ PosterBoard support, with an in-app **Nugget-Wallpapers** gallery
+* 🛡️ **Portable backups** — export your recovery point to Files/AirDrop and import it back
+* 🍬 Eight alternate app icons
+* 🎨 Accent colour picker
+
+## Requirements
+
+**iOS 26.0 or newer.** Tweaks and Siri AI Setup additionally require **iOS 27** — see the table below.
+
+## Compatibility
+
+| iOS Version | MobileGestalt Editing | Customization |
+| ----------- | --------------------- | ----------- |
+| iOS 18.x and earlier | ❌ Unsupported | ❌ Unsupported |
+| iOS 26.0 – 26.6 | ❌ Unsupported | ✅ Supported |
+| iOS 27.0 Beta 1 – Beta 4 | ✅ Supported | ✅ Supported |
+| Later versions | ❌ Patched | ❌ Unsupported |
+
+> **Note:** On iOS 26, the exploit does not provide the access required for MobileGestalt editing, so tweaks are unavailable. PosterBoard may still work, but compatibility has not been fully verified.
+
+> **Siri AI Setup is beta.** It can cause instability, boot loops, or require a device restore, and the **Siri AI** mode in particular is the least reliable feature in Ketamine — it may have no effect at all. Every key it touches is saved first, so its changes can be reverted. Back up before using it.
+
+## Credits
+Ketamine is built on the research and proof of concept from the following projects:
+- **0xjohnnydev** — MobileHouseArrest-PoC
+- **forcequitOS** — bad_query research and implementation
+- **leminlimez** — Pocket Poster
+- **rooootdev** — NeoSpring
+
+## Licence
+Ketamine is licensed under the **GNU General Public License v3.0**.`
+            },
+            {
+                id: 'airlift',
+                name: 'Airlift',
+                author: '0xjohnnydev',
+                repo: 'airlift',
+                icon: 'fa-paper-plane',
+                shortDesc: 'Outil de gestion et transfert avancé pour les appareils iOS.',
+                description: `# airlift
+An AirTraffic sandbox escape for iOS 27.0.
+This is a simple proof-of-concept for developers and security researchers.
+If you are worried about burning bugs for clout - there are always more bugs (trollface).
+AirTraffic syncs media, including Books, from a Mac to iOS. airlift abuses that path to read and write files outside AirTraffic's intended directory scope. It runs from a paired Mac over Wi-Fi or USB, with no iOS app required. Tested on iOS 27.0 RC (24A435); it should also work on iOS 27.0 final (24A437). Other iPhone builds are allowed with a warning.
+Verified scope
+Fresh-file writes were confirmed in the following directories:
+ /var/mobile
+ /var/mobile/Documents
+ /var/mobile/Library
+ /var/mobile/Library/Preferences
+ /var/mobile/Library/Caches
+ /var/mobile/Library/SpringBoard
+ /var/mobile/Library/SMS
+ /var/mobile/Library/Safari
+ /var/mobile/Containers
+ /var/mobile/Containers/Data/Application
+ /var/mobile/Containers/Shared/AppGroup
+ /var/tmp
+Reads are indirect: a known file is moved into Media, read through AFC, and moved back.
+As of now, this does not work on the MobileGestalt plist.
+Components
+macOS:
+ MobileDevice.framework -> AirTrafficHost.framework
+iOS:
+ com.apple.streaming_zip_conduit -> com.apple.afc -> com.apple.atc / AirTrafficDevice -> Books sync client -> ATLegacyAssetLink -> ATAirlock -> NSFileManager
+ATAirlock path validation
+Effective logic in -[ATAirlock processCompletedAsset:] for these Book assets:
+Books "Persistent ID" reaches asset.identifier without path validation.
+NSString *source = [@"/var/mobile/Media/Airlock/Book" stringByAppendingPathComponent:asset.identifier];
+FileComplete.AssetPath controls asset.path.
+NSString *destination = [[@"/var/mobile/Media/" stringByAppendingPathComponent:asset.path] stringByStandardizingPath];
+This checks the path string, not where a symlink resolves.
+if (![destination hasPrefix:@"/var/mobile/Media/"]) return;
+The source is unchecked and the destination follows ancestor symlinks.
+[fileManager moveItemAtPath:source toPath:destination error:&error];
+The unchecked source accepts .. components from a Books asset identifier. StreamingZip accepts the relative symlink while it is still contained in its extraction directory. The first move relocates it below Media; the second uses it as part of the destination and writes the payload outside Media.
+The included PoC writes a random canary, verifies it, and removes it. Existing Books sync files are preserved and restored after the run.
+Build and run
+airlift lists compatible paired iPhones and asks which one to use. Pass a UDID with --device to skip the prompt. Failed runs include helper diagnostics; pass --verbose to include them on successful runs too.
+Commands:
+ make
+ ./airlift.py
+ ./airlift.py --target /var/mobile/Library/Safari (Choose another destination)
+The default destination is /var/mobile/Library/SpringBoard.`
+            },
+            {
+                id: 'aircard',
+                name: 'Aircard',
+                author: 'mak5er',
+                repo: 'aircard',
+                icon: 'fa-credit-card',
+                shortDesc: 'Manipulation et gestion NFC avancée directement sur l\'appareil.',
+                description: `# AirCard 🎴
+Apple Wallet Card Skinner & Lockscreen Passcode Themer for iOS 18+ (No Jailbreak Required)
+Tested on iOS 27 release.
+Powered by the airlift AirTraffic sync exploit.
+Features
+ * Custom Card Skins: Assign custom artwork, textures, or bank logos to Apple Pay and Wallet cards.
+ * Lock Screen Passcode Themes (.passthm): Apply custom keypad button artwork from popular .passthm themes directly to iOS 18+ lockscreen.
+ * Passcode Theme Creator: Create custom themes from a single wallpaper (Seamless Poster Slicing) or build key-by-key (Individual Keys).
+ * Interactive Photo Framing: Pan and zoom artwork directly inside keypad buttons with real-time iPhone preview.
+ * Edit Existing .passthm Themes: Open any Cowabunga or Nugget theme package directly in the creator, tweak button artwork, reposition photos, and re-export or flash.
+ * Per-Card & Bulk Customization: Set unique artwork for each card or apply one design across all cards with a single click.
+ * Zero-Hassle Card Detection: Tap any card in your iPhone's Wallet app to detect its hash in real-time.
+ * 100% Standalone (Universal): Native support for both Apple Silicon and Intel (x86) Macs. All required device-communication utilities and image engines are pre-bundled inside the app.
+ * Zero Prerequisites: No Homebrew, Python packages, or terminal setup required for macOS users.
+Installation
+macOS (Universal DMG)
+ * Download AirCard.dmg from Releases (https://github.com/mak5er/AirCard/releases).
+ * Open AirCard.dmg and drag AirCard.app into your Applications folder.
+ * Fully compatible with both Apple Silicon and Intel (x86) Macs.
+First Launch on macOS (Gatekeeper):
+If macOS displays an unidentified developer prompt on first launch:
+ * Method 1 (UI): Right-click (or Control-click) AirCard.app in Applications -> click Open -> click Open.
+ * Method 2 (Terminal): sudo xattr -cr /Applications/AirCard.app
+How to Customize Apple Wallet Cards
+ * Connect your iPhone to your Mac via USB cable and ensure it is unlocked and trusted.
+ * In AirCard, stay on the Wallet Cards tab and click Scan Cards.
+ * On your iPhone:
+   * Double-click the Side (Power) button to open Apple Pay.
+   * Authenticate with Face ID.
+   * Tap your card (or tap it once more) to trigger instant detection!
+ * Click on any card mockup or drag & drop an image directly onto the card.
+ * Click Flash Skins.
+ * Force-close the Wallet app on your iPhone from the App Switcher (or reboot) to see your new custom card design!
+How to Apply Lockscreen Passcode Themes (.passthm)
+ * Switch to the Passcode Themes tab at the top of AirCard.
+ * Drag & drop any .passthm file into the app (or click Choose .passthm File).
+ * AirCard will inspect the theme and display an interactive preview on the numeric keypad (0–9, *, #).
+ * Click Apply Passcode Theme.
+ * Restart your iPhone to reload the lock screen cache and see your custom passcode buttons!
+Important - Turn OFF Bold Text:
+On your iPhone, go to Settings -> Display & Brightness and make sure Bold Text is turned OFF. If Bold Text is enabled, iOS bypasses cached keypad graphics and draws vector fonts instead.
+Building from Source
+git clone https://github.com/mak5er/AirCard.git
+cd AirCard
+chmod +x build.sh
+./build.sh
+This builds universal binaries (arm64 + x86_64), bundles dependencies into build/AirCard.app, and outputs build/AirCard.dmg.
+Contributors
+ * @mak5er (Developer) — GitHub (https://github.com/mak5er) · Twitter / X (https://x.com/mak5er)
+ * @Lumid-Off (Contributor & Developer) — GitHub (https://github.com/Lumid-Off) · Twitter / X (https://x.com/LumidOff)
+Credits
+ * Core exploit based on airlift (AirTraffic sync escape).
+`
+            },
+            {
+                id: '3105',
+                name: '3105',
+                author: 'yangjiii',
+                repo: '3105',
+                icon: 'fa-terminal',
+                shortDesc: 'Suite d\'outils et d\'utilitaires système pour utilisateurs avancés.',
+                description: `# 3105
+Kho nội dung và trình quản lý Patch, dữ liệu ứng dụng, Dialer và hình nền dành cho iOS.
+ * Phiên bản : 2.0
+ * iOS : 17.0–18.7.1 | 26.0–26.6.1 | 27 beta 1–4
+ * Ngôn ngữ : English | Tiếng Việt | 简体中文
+English · Hướng dẫn Patch · Giấy phép
+> AVERTISSEMENT : 3105 là phần mềm nghiên cứu để quản lý thiết bị cá nhân. Chỉ sử dụng trên thiết bị và dữ liệu thuộc quyền sở hữu của bạn, đồng thời luôn sao lưu trước khi thay đổi dữ liệu ứng dụng.
+> 
+Giao diện
+(Les aperçus de l'application sont situés dans le dossier docs/images/ : home-2.0.png, sources-2.0.png, installed-2.0.png)
+Có gì mới trong 2.0
+ * Kho nội dung mới — khám phá Patch, hình nền, Dialer và tính năng 3105 từ Dành cho bạn, Mới cập nhật hoặc từng nguồn; tiến trình tải và kết quả cài đặt được hiển thị rõ ràng.
+ * Đã cài gọn gàng hơn — mọi nội dung đã tải được quản lý tại một nơi, có tên, biểu tượng và loại nội dung để dễ nhận biết. 3105 cũng thông báo khi gói đã cài có bản cập nhật.
+ * Patch linh hoạt hơn — một Patch có thể dùng cho nhiều ứng dụng và App Group, tự tìm dữ liệu phù hợp trên từng máy và vẫn áp dụng được những phần đang có trên thiết bị.
+ * Tùy chỉnh Patch — tác giả có thể cho người dùng nhập nội dung, bật công tắc hoặc chọn giá trị trước khi áp dụng. Patch hỗ trợ thay file, chỉnh sửa plist/JSON và mật khẩu tùy chọn.
+ * Khôi phục an toàn hơn — cải thiện sao lưu, đặt lại, khôi phục và xóa Patch đang hoạt động; kết quả mỗi thao tác được thông báo rõ ràng hơn.
+ * Dialer — hỗ trợ gói .3105pass, tự nhận dạng kiểu phím sáng, tối và chữ đậm theo dữ liệu có trên thiết bị.
+ * Hình nền từ kho — tải và quản lý gói .tendies ngay trong ứng dụng, xem ảnh trong mô tả và xóa nội dung đã cài tại mục Đã cài.
+ * Trình quản lý Tệp mới — tách rõ Workspace 3105, Application và App Group; bổ sung tệp ẩn, thẻ Tệp, yêu thích, thông tin file và trình chỉnh sửa plist đơn giản.
+ * Tính năng 3105 — Dọn dẹp trở thành tính năng có thể cài hoặc gỡ; Footnote màn hình khóa và Supervised có trên các bản iOS 27 được hỗ trợ.
+ * Giao diện và phản hồi — thiết kế lại trang chủ, nguồn, chi tiết gói và Đã cài; trạng thái tương thích, tải xuống, cài đặt và lỗi đều dễ hiểu hơn.
+So với 1.1.1, bản 2.0 chuyển 3105 từ một bộ công cụ riêng lẻ thành một nơi thống nhất để tìm, cài đặt và quản lý nội dung.
+Tính năng chính
+ * Khám phá và cài nội dung trực tiếp từ nhiều nguồn trong Kho 3105.
+ * Quản lý Patch, hình nền, Dialer và tính năng 3105 trong mục Đã cài.
+ * Duyệt dữ liệu theo tên ứng dụng, bundle identifier hoặc App Group.
+ * Trình quản lý tệp có tìm kiếm, xem trước, chia sẻ, nhập nhiều tệp, sao chép, di chuyển, đổi tên, xóa, nén/giải nén ZIP, thẻ Tệp và yêu thích.
+ * Tạo và nhập Patch .3105 hỗ trợ nhiều ứng dụng, App Group, tùy chỉnh trước khi áp dụng và mật khẩu tùy chọn.
+ * Cài Dialer .3105pass, hình nền .tendies và các tính năng do 3105 cung cấp.
+ * Sao lưu và khôi phục file gốc khi áp dụng Patch; chỉ xóa dữ liệu tạm đã xác định khi sử dụng Dọn dẹp.
+ * 3105 không cài jailbreak, bootstrap hay daemon thường trú và không inject mã vào ứng dụng bên thứ ba. Do ứng dụng vẫn dùng khai thác thiết bị và có thể sửa dữ liệu app, không thể bảo đảm vượt qua mọi cơ chế kiểm tra tính toàn vẹn hoặc phát hiện jailbreak.
+ * Hỗ trợ tiếng Anh, tiếng Việt và tiếng Trung giản thể.
+Phiên bản iOS đã xác minh
+| Hệ thống | Phiên bản/build |
+|---|---|
+| iOS 17 | 17.0 đến 17.7.x |
+| iOS 18 | 18.0 đến 18.7.1 |
+| iOS 26 | 26.0 đến 26.6.1 |
+| iOS 27 Developer Beta 1 | 24A5355q |
+| iOS 27 Developer Beta 2 | 24A5370h |
+| iOS 27 Developer Beta 3 / Public Beta 1 | 24A5380h |
+| iOS 27 Developer Beta 4 / Public Beta 2 | 24A5390f |
+Những build không có trong bảng sẽ được đánh dấu là không hỗ trợ.
+Lưu ý cài đặt
+ * Các chức năng trên thiết bị yêu cầu ứng dụng được ký bằng chứng chỉ doanh nghiệp.
+ * Không hỗ trợ SideStore, AltStore, 3uTools hoặc LiveContainer.
+ * Bundle ID com.apple.mobile.MobileHouseArrest được giữ có chủ đích cho luồng MHA-C2.
+ * Cây mã nguồn không chứa chứng chỉ, provisioning profile, ứng dụng đã ký hoặc IPA; phần Release có thể cung cấp IPA unsigned.
+Tác giả và ghi công
+3105 được phát triển và thiết kế bởi YangJiii. Xem THIRD_PARTY_NOTICES.md để biết các dự án và nhà phát triển nền tảng đã được sử dụng/tham khảo.
+Giấy phép
+Phần mã gốc của 3105 được phát hành theo GNU General Public License v3.0. Thành phần của bên thứ ba vẫn tuân theo bản quyền và điều khoản của dự án nguồn tương ứng; xem THIRD_PARTY_NOTICES.md.
+`
+            }   
+        ];
+
+        function renderApps() {
+            const grid = document.getElementById('app-grid');
+            grid.innerHTML = '';
+
+            apps.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-sky-900/20 hover:-translate-y-1 group flex flex-col h-full';
+                
+                card.innerHTML = `
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-2xl text-sky-400 group-hover:scale-110 group-hover:bg-sky-500/20 transition-all border border-slate-700">
+                            <i class="fa-solid ${app.icon}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-white leading-tight">${app.name}</h3>
+                            <a href="https://github.com/${app.author}" target="_blank" class="text-sm text-slate-400 hover:text-sky-400 transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i>${app.author}
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-300 text-sm mb-6 flex-grow line-clamp-3">
+                        ${app.shortDesc}
+                    </p>
+                    
+                    <div class="flex gap-3 mt-auto pt-4 border-t border-slate-700/50">
+                        <button onclick="openModal('${app.id}')" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors">
+                            <i class="fa-solid fa-circle-info mr-1"></i> Infos
+                        </button>
+                        <button onclick="downloadLatest('${app.author}', '${app.repo}', this)" class="flex-1 py-2.5 rounded-xl text-sm font-medium bg-sky-500/10 text-sky-400 hover:bg-sky-500 hover:text-white border border-sky-500/30 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> Obtenir
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function downloadLatest(owner, repo, buttonElement) {
+            const originalHtml = buttonElement.innerHTML;
+            
+            buttonElement.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Recherche...`;
+            buttonElement.disabled = true;
+            buttonElement.classList.add('opacity-75', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                let ipaUrl = null;
+                if (data.assets && data.assets.length > 0) {
+                    const ipaAsset = data.assets.find(asset => asset.name.toLowerCase().endsWith('.ipa'));
+                    if (ipaAsset) {
+                        ipaUrl = ipaAsset.browser_download_url;
+                    }
+                }
+
+                if (ipaUrl) {
+                    buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> Lancement...`;
+                    buttonElement.classList.replace('text-sky-400', 'text-green-400');
+                    buttonElement.classList.replace('border-sky-500/30', 'border-green-500/30');
+                    
+                    setTimeout(() => {
+                        window.location.href = ipaUrl;
+                        resetButton(buttonElement, originalHtml);
+                    }, 1000);
+                } else {
+                    console.warn("Aucun fichier .ipa trouvé dans les assets. Redirection vers la page GitHub.");
+                    fallbackToGithubReleases(owner, repo, buttonElement, originalHtml);
+                }
+
+            } catch (error) {
+                console.error("Erreur lors de la récupération de la release:", error);
+                fallbackToGithubReleases(owner, repo, buttonElement, originalHtml);
+            }
+        }
+
+        function fallbackToGithubReleases(owner, repo, buttonElement, originalHtml) {
+            buttonElement.innerHTML = `<i class="fa-brands fa-github"></i> Ouverture...`;
+            setTimeout(() => {
+                window.open(`https://github.com/${owner}/${repo}/releases/latest`, '_blank');
+                resetButton(buttonElement, originalHtml);
+            }, 800);
+        }
+
+        function resetButton(buttonElement, originalHtml) {
+            setTimeout(() => {
+                buttonElement.innerHTML = originalHtml;
+                buttonElement.disabled = false;
+                buttonElement.classList.remove('opacity-75', 'cursor-not-allowed', 'text-green-400', 'border-green-500/30');
+                buttonElement.classList.add('text-sky-400', 'border-sky-500/30');
+            }, 1000);
+        }
+
+        const modal = document.getElementById('info-modal');
+        const modalContainer = document.getElementById('modal-container');
+        let currentAppDownloadParams = null;
+
+        function openModal(appId) {
+            const app = apps.find(a => a.id === appId);
+            if (!app) return;
+
+            document.getElementById('modal-title').textContent = app.name;
+            document.getElementById('modal-author').innerHTML = `<i class="fa-brands fa-github mr-1"></i> ${app.author} / ${app.repo}`;
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
+            
+            document.getElementById('modal-body').innerHTML = marked.parse(app.description);
+
+            const downloadBtn = document.getElementById('modal-download-btn');
+            
+            const newBtn = downloadBtn.cloneNode(true);
+            downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
+            
+            newBtn.addEventListener('click', function() {
+                downloadLatest(app.author, app.repo, this);
+            });
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContainer.classList.remove('opacity-0', 'scale-95');
+                modalContainer.classList.add('opacity-100', 'scale-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalContainer.classList.remove('opacity-100', 'scale-100');
+            modalContainer.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+      
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApps();
+        });
+
+    </script>
+</body>
+</html>
